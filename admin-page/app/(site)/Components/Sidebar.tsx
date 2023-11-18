@@ -1,8 +1,9 @@
 "use client";
 
 import Image from 'next/image';
-import React from 'react';
+import React, { useLayoutEffect } from 'react';
 
+import { checkUserSession } from '@/utils/auth';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 
@@ -10,6 +11,17 @@ const Sidebar = () => {
   const path = usePathname();
 
   const router = useRouter();
+
+  useLayoutEffect(() => {
+    const getSession = async () => {
+      const hasValidSession = await checkUserSession();
+
+      if (!hasValidSession) {
+        router.replace('/login');
+      }
+    }
+    getSession();
+  }, [router]);
 
   return (
     <div className='flex flex-col justify-between pr-2 bg-white border-r shadow-2xl w-80'>
