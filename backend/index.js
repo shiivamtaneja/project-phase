@@ -1,22 +1,22 @@
 const express = require('express');
-
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 const { PrismaClient } = require('@prisma/client');
+require('dotenv').config();
 
-const app = express();
-
-const corsOptions = {
-  origin: 'http://localhost:3001',
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  credentials: true, // Allow cookies and authentication headers to be sent
-};
-
+const { authenticateToken } = require('./middleware/authenticateToken');
 
 const prisma = new PrismaClient();
 
-require('dotenv').config();
+const app = express();
 
-app.use(cors(corsOptions));
+app.use(cors({
+  origin: 'http://localhost:3001',
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true, // Allow cookies and authentication headers to be sent
+}));
+
+app.use(cookieParser());
 
 const PORT = process.env.PORT || 3000;
 
@@ -24,9 +24,12 @@ app.use(express.json());
 
 app.use(express.urlencoded({ extended: false }));
 
+app.use('/api/auth', require('./routes/route.auth'));
+
 app.get('/getdata', async (req, res) => {
   try {
-
+    console.log(req.cookies);
+    console.log('req.cookies.test');
     const user = await prisma.user.findMany();
 
     if (!user) {
@@ -46,6 +49,10 @@ app.get('/getdata', async (req, res) => {
   } finally {
     await prisma.$disconnect();
   }
+});
+
+app.get('/check-session', authenticateToken, (req, res) => {
+  res.status(200).json({ data: 'User has a valid session' });
 });
 
 app.listen(PORT, () => console.log(`🚀 @ http://localhost:${PORT}`));
