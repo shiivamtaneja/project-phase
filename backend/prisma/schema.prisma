@@ -1,0 +1,70 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "postgresql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model User {
+  user_id       Int    @id @default(autoincrement())
+  username      String
+  email         String
+  password_hash String
+
+  // Define the UserHierarchy relation
+  hierarchies        UserHierarchy[]     @relation("userHierarchies")
+  parentHierarchies  UserHierarchy[]     @relation("parentUser")
+  childHierarchies   UserHierarchy[]     @relation("childUser")
+  sales_distribution SalesDistribution[]
+}
+
+model UserHierarchy {
+  hierarchy_id      Int    @id @default(autoincrement())
+  parent_user_id    Int
+  child_user_id     Int
+  relationship_type String
+
+  // Define the foreign key relationships
+  parent_user User  @relation("parentUser", fields: [parent_user_id], references: [user_id])
+  child_user  User  @relation("childUser", fields: [child_user_id], references: [user_id])
+  User        User? @relation("userHierarchies", fields: [userUser_id], references: [user_id])
+  userUser_id Int?
+
+  // Manually add index for relation field
+  @@index([parent_user_id], name: "idx_parent_user_id_for_relations")
+  @@index([child_user_id], name: "idx_child_user_id_for_relations")
+  @@index([userUser_id])
+}
+
+// Define the SalesDistribution model
+model SalesDistribution {
+  distribution_id Int      @id @default(autoincrement())
+  user_id         Int
+  sales_amount    Float
+  date            DateTime
+
+  // Define foreign key relationships
+  User        User?      @relation(fields: [userUser_id], references: [user_id])
+  userUser_id Int?
+  products    Products[]
+
+  @@index([userUser_id])
+}
+
+// Define the Products model
+model Products {
+  product_id   Int    @id @default(autoincrement())
+  product_name String
+
+  // Define foreign key relationships
+  SalesDistribution                SalesDistribution? @relation(fields: [salesDistributionDistribution_id], references: [distribution_id])
+  salesDistributionDistribution_id Int?
+
+  @@index([salesDistributionDistribution_id])
+}
