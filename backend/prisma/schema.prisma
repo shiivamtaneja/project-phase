@@ -8,41 +8,53 @@ datasource db {
   relationMode = "prisma"
 }
 
-model Products {
-  product_id                       Int    @id @default(autoincrement())
-  product_name                     String
-  salesDistributionDistribution_id Int?
-
-  @@index([salesDistributionDistribution_id])
-}
-
-model SalesDistribution {
-  distribution_id Int      @id @default(autoincrement())
-  user_id         Int
-  sales_amount    Float
-  date            DateTime
-  userUser_id     Int?
-
-  @@index([userUser_id])
-}
-
+// Define the User model
 model User {
-  user_id       Int    @id @default(autoincrement())
-  username      String
-  email         String
-  password_hash String
+  user_id           Int                 @id @default(autoincrement())
+  username          String
+  email             String              @unique
+  password_hash     String
+  // Other user-related fields can be added here
+  SalesDistribution SalesDistribution[]
+  parent_user       UserHierarchy[]     @relation("parent_user")
+  child_user        UserHierarchy[]     @relation("child_user")
 }
 
+// Define the UserHierarchy model
 model UserHierarchy {
   hierarchy_id      Int    @id @default(autoincrement())
   parent_user_id    Int
   child_user_id     Int
   relationship_type String
-  userUser_id       Int?
+  // Define foreign key relationships
+  parent_user       User   @relation("parent_user", fields: [parent_user_id], references: [user_id])
+  child_user        User   @relation("child_user", fields: [child_user_id], references: [user_id])
 
-  @@index([userUser_id])
-  @@index([child_user_id], map: "idx_child_user_id_for_relations")
-  @@index([parent_user_id], map: "idx_parent_user_id_for_relations")
+  @@index([parent_user_id])
+  @@index([child_user_id])
+}
+
+// Define the SalesDistribution model
+model SalesDistribution {
+  distribution_id Int      @id @default(autoincrement())
+  user_id         Int
+  product_id      Int
+  sales_amount    Float
+  date            DateTime
+  // Define foreign key relationships
+  user            User     @relation(fields: [user_id], references: [user_id])
+  product         Products @relation(fields: [product_id], references: [product_id])
+
+  @@index([user_id])
+  @@index([product_id])
+}
+
+// Define the Products model
+model Products {
+  product_id        Int                 @id @default(autoincrement())
+  product_name      String
+  // Other product-related fields can be added here
+  SalesDistribution SalesDistribution[]
 }
 
 model Admin {
