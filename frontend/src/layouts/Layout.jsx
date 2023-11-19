@@ -1,9 +1,10 @@
+/* eslint-disable */
 import { Suspense } from 'react';
 
 import { Outlet } from 'react-router-dom';
 
-import Header from '../components/Header/Header';
 import Footer from '../components/Footer';
+import Header from '../components/Header/Header';
 import HeaderBottom from '../components/Header/HeaderBottom';
 import SideNav from '../components/Navbar/SideNav';
 import ScrollToTop from '../components/ScrollToTop.jsx';

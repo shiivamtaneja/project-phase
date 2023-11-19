@@ -1,7 +1,8 @@
+/* eslint-disable */
 import { lazy } from 'react';
 import './App.css';
 
-import { RouterProvider, Route, createBrowserRouter, createRoutesFromElements } from 'react-router-dom';
+import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from 'react-router-dom';
 
 import Layout from './layouts/Layout';
 

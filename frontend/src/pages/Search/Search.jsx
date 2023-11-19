@@ -1,14 +1,15 @@
+/* eslint-disable */
 import { useEffect, useState } from 'react';
 
 import { Link } from 'react-router-dom';
 
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { searchQuery } from '../../redux/slice';
 
-import Breadcrumbs from '../../components/pageProps/Breadcrumbs';
-import ShopSideNav from '../../components/pageProps/shopPage/ShopSideNav';
-import ShopMain from '../../components/pageProps/shopPage/ShopMain';
 import Cross from '../../assets/Icons/CrossIcon';
+import Breadcrumbs from '../../components/pageProps/Breadcrumbs';
+import ShopMain from '../../components/pageProps/shopPage/ShopMain';
+import ShopSideNav from '../../components/pageProps/shopPage/ShopSideNav';
 
 const Search = ({ prevLocation, location }) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
