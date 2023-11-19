@@ -17,9 +17,15 @@ model User {
   SalesDistribution SalesDistribution[]
   address           Address?
   business_user     BusinessUser?
+  Order             Order?              @relation(fields: [order_id], references: [order_id])
+  order_id          Int?
+  Feedback          Feedback?           @relation(fields: [feedback_id], references: [feedback_id])
+  feedback_id       Int?
 
   @@index([email])
   @@index([user_id])
+  @@index([order_id])
+  @@index([feedback_id])
 }
 
 model BusinessUser {
@@ -81,6 +87,7 @@ model Order {
   quantity          Int
   order_date        DateTime @default(now())
   is_business_order Boolean  @default(false)
+  users             User[]
 }
 
 model Campaign {
@@ -94,4 +101,5 @@ model Feedback {
   feedback_id Int     @id @default(autoincrement())
   rating      Int
   comment     String?
+  user        User[]
 }
