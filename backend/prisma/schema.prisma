@@ -54,6 +54,7 @@ model SalesDistribution {
 model Products {
   product_id        Int                 @id @default(autoincrement())
   product_name      String
+  price             Float
   // Other product-related fields can be added here
   SalesDistribution SalesDistribution[]
 }
