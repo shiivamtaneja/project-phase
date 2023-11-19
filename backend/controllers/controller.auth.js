@@ -16,10 +16,10 @@ require('dotenv').config();
  * @access public
  */
 const createUser = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, username } = req.body;
 
   try {
-    const existingAdmin = await prisma.admin.findFirst({
+    const existingAdmin = await prisma.user.findFirst({
       where: {
         email
       }
@@ -31,10 +31,12 @@ const createUser = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const user = await prisma.admin.create({
+    const user = await prisma.user.create({
       data: {
         email,
-        hashed_password: hashedPassword
+        username,
+        password_hash: hashedPassword,
+        is_admin: true
       }
     });
 
@@ -60,13 +62,13 @@ const loginUser = async (req, res, next) => {
 
   try {
 
-    const user = await prisma.admin.findUnique({
+    const user = await prisma.user.findUnique({
       where: {
         email
       }
     });
 
-    if (!user || !(await bcrypt.compare(password, user.hashed_password))) {
+    if (!user || !(await bcrypt.compare(password, user.password_hash))) {
       return res.status(constants.UNAUTHORIZED).json({ error: "Invalid email or password." });
     };
 

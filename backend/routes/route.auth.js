@@ -18,6 +18,7 @@ router.post(
   '/register',
   [
     body('email').isEmail(),
+    body('username').notEmpty(),
     body('password').notEmpty(),
   ],
   inputValidator,
