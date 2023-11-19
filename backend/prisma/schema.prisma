@@ -15,6 +15,8 @@ model User {
   email             String              @unique
   password_hash     String
   is_admin          Boolean             @default(false)
+  latitude          Float?
+  longitude         Float?
   // Other user-related fields can be added here
   SalesDistribution SalesDistribution[]
   parent_user       UserHierarchy[]     @relation("parent_user")

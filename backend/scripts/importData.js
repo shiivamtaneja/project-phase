@@ -46,29 +46,29 @@ async function createProduct(productName, price) {
   return newProduct;
 }
 
-// createUser('JohnDoe', 'john@example.com', '123', false)
-//   .then(newUser => {
-//     console.log('Created user:', newUser);
-//   })
-//   .catch(error => {
-//     console.error('Error creating user:', error);
-//   });
+createUser('JohnDoe', 'john@example.com', '123', false)
+  .then(newUser => {
+    console.log('Created user:', newUser);
+  })
+  .catch(error => {
+    console.error('Error creating user:', error);
+  });
 
-// createSalesDistribution(1, 1, 100.50, new Date())
-//   .then(newDistribution => {
-//     console.log('Created sales distribution:', newDistribution);
-//   })
-//   .catch(error => {
-//     console.error('Error creating sales distribution:', error);
-//   });
+createSalesDistribution(1, 1, 100.50, new Date())
+  .then(newDistribution => {
+    console.log('Created sales distribution:', newDistribution);
+  })
+  .catch(error => {
+    console.error('Error creating sales distribution:', error);
+  });
 
-// createProduct("car oil", 100.50)
-//   .then(createProduct => {
-//     console.log('Created product:', createProduct);
-//   })
-//   .catch(error => {
-//     console.error('Error creating product:', error);
-//   });
+createProduct("car oil", 100.50)
+  .then(createProduct => {
+    console.log('Created product:', createProduct);
+  })
+  .catch(error => {
+    console.error('Error creating product:', error);
+  });
 
 createUserHierarchy(1, 2, "Distributer")
   .then(createUserHierarchy => {
