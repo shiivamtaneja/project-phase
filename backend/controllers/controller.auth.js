@@ -83,12 +83,30 @@ const loginUser = async (req, res, next) => {
 
   } catch (err) {
     console.error('Error login user:', err);
+    return res.status(constants.SERVER_ERROR).json({ error: "Internal Server Error occured!" });
   } finally {
     await prisma.$disconnect();
   }
-}
+};
+
+/**
+ * @desc Logout Users
+ * @route GET /api/auth/logout
+ * @access public
+ */
+const logoutUser = (req, res) => {
+  try {
+    res.clearCookie('jwt');
+
+    return res.status(constants.SUCCESS).json({ data: "Logout Sucessfully." });
+  } catch (err) {
+    console.error('Error during logout:', err);
+    return res.status(constants.SERVER_ERROR).json({ error: "Internal Server Error occured!" });
+  }
+};
 
 module.exports = {
   createUser,
-  loginUser
+  loginUser,
+  logoutUser
 }

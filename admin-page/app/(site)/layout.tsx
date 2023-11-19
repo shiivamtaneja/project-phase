@@ -1,8 +1,6 @@
 import type { Metadata } from 'next';
 import '../globals.css';
-
-import { useState } from 'react';
-import Sidebar from './Components/Sidebar';
+import SidebarComponent from './Components/Sidebar';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -12,9 +10,9 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className='flex h-screen overflow-hidden bg-gray-100'>
-        <Sidebar />
-        <div className='bg-[#FEFAEF] w-screen modal-close' id='side-body'>
+      <body>
+        <div className="relative flex flex-row antialiased bg-slate-100">
+          <SidebarComponent />
           {children}
         </div>
       </body>
