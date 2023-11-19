@@ -8,43 +8,48 @@ datasource db {
   relationMode = "prisma"
 }
 
-// Define the User model
 model User {
   user_id           Int                 @id @default(autoincrement())
   username          String
   email             String              @unique
   password_hash     String
   is_admin          Boolean             @default(false)
-  latitude          Float?
-  longitude         Float?
-  // Other user-related fields can be added here
   SalesDistribution SalesDistribution[]
-  parent_user       UserHierarchy[]     @relation("parent_user")
-  child_user        UserHierarchy[]     @relation("child_user")
+  address           Address?
+  business_user     BusinessUser?
+
+  @@index([email])
+  @@index([user_id])
 }
 
-// Define the UserHierarchy model
+model BusinessUser {
+  business_user_id Int             @id @default(autoincrement())
+  parent_user      UserHierarchy[] @relation("ParentBusinessUser")
+  child_user       UserHierarchy[] @relation("ChildBusinessUser")
+  user             User            @relation(fields: [user_id], references: [user_id])
+  user_id          Int             @unique
+
+  @@index([business_user_id])
+}
+
 model UserHierarchy {
-  hierarchy_id      Int    @id @default(autoincrement())
-  parent_user_id    Int
-  child_user_id     Int
-  relationship_type String
-  // Define foreign key relationships
-  parent_user       User   @relation("parent_user", fields: [parent_user_id], references: [user_id])
-  child_user        User   @relation("child_user", fields: [child_user_id], references: [user_id])
+  user_hierarchy_id    Int          @id @default(autoincrement())
+  relationship_type    String
+  parent_user_id       Int
+  child_user_id        Int
+  parent_business_user BusinessUser @relation("ParentBusinessUser", fields: [parent_user_id], references: [business_user_id])
+  child_business_user  BusinessUser @relation("ChildBusinessUser", fields: [child_user_id], references: [business_user_id])
 
   @@index([parent_user_id])
   @@index([child_user_id])
 }
 
-// Define the SalesDistribution model
 model SalesDistribution {
   distribution_id Int      @id @default(autoincrement())
   user_id         Int
   product_id      Int
   sales_amount    Float
   date            DateTime
-  // Define foreign key relationships
   user            User     @relation(fields: [user_id], references: [user_id])
   product         Products @relation(fields: [product_id], references: [product_id])
 
@@ -52,11 +57,41 @@ model SalesDistribution {
   @@index([product_id])
 }
 
-// Define the Products model
 model Products {
   product_id        Int                 @id @default(autoincrement())
   product_name      String
   price             Float
-  // Other product-related fields can be added here
   SalesDistribution SalesDistribution[]
+}
+
+model Address {
+  address_id     Int    @id @default(autoincrement())
+  street_address String
+  city           String
+  state          String
+  country        String
+  user           User   @relation(fields: [user_id], references: [user_id])
+  user_id        Int    @unique
+  latitude       Float
+  longitude      Float
+}
+
+model Order {
+  order_id          Int      @id @default(autoincrement())
+  quantity          Int
+  order_date        DateTime @default(now())
+  is_business_order Boolean  @default(false)
+}
+
+model Campaign {
+  campaign_id   Int      @id @default(autoincrement())
+  campaign_name String
+  start_date    DateTime
+  end_date      DateTime
+}
+
+model Feedback {
+  feedback_id Int     @id @default(autoincrement())
+  rating      Int
+  comment     String?
 }
