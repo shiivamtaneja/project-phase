@@ -11,6 +11,7 @@ const RegisterComponent = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   const [email, setEmail] = useState('');
+  const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
 
   const [sucess, setSucess] = useState<string | null>(null);
@@ -30,6 +31,7 @@ const RegisterComponent = () => {
         },
         body: JSON.stringify({
           email,
+          username: userName,
           password
         }),
         credentials: 'include',
@@ -73,6 +75,15 @@ const RegisterComponent = () => {
           }
           <form className="relative space-y-8" >
             <Input
+              name='Username'
+              id='username'
+              placeholder={userName}
+              required={true}
+              moveLabel={userName != ''}
+              type='userName'
+              onChange={(e: ChangeEvent<HTMLInputElement>) => setUserName(e.target.value)}
+            />
+            <Input
               name='Email'
               id='email'
               placeholder={email}
@@ -81,7 +92,6 @@ const RegisterComponent = () => {
               type='email'
               onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
             />
-
             <Input
               name='Password (min: 6)'
               id='password'
